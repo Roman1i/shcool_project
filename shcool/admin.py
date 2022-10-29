@@ -1,3 +1,6 @@
+import os
+
+
 def show_teachers():
     with open('data\Teachers_subject', 'r', encoding='utf-8') as file:
         teachers = eval(file.read())
@@ -12,13 +15,21 @@ def add_teacher():
         teachers = eval(file.read())
     name = input('Введите логин: ')
     password = input('Введите пароль: ')
-    subject = input('Введите должность: ')
+    subject = input('Введите предмет: ')
     teachers_subject[name] = subject
     teachers[name] = password
     with open('data\Teachers_subject', 'w', encoding='utf-8') as file:
         file.write(str(teachers_subject))
     with open('data\Teachers', 'w', encoding='utf-8') as file:
         file.write(str(teachers))
+    with open('data\students', 'r', encoding='utf-8') as file:
+        tmp = eval(file.read())
+        for item in tmp.keys():
+            with open(f'data\students_grade\{item}', 'r', encoding='utf-8') as file:
+                grades = eval(file.read())
+                grades.append([f'{subject}: '])
+            with open(f'data\students_grade\{item}', 'w', encoding='utf-8') as file:
+                file.write(str(grades))
 
 
 def delete_teacher():
@@ -27,6 +38,7 @@ def delete_teacher():
     with open('data\Teachers', 'r', encoding='utf-8') as file:
         teachers = eval(file.read())
     name = input('Введите логин: ')
+    subject = input('Введите предмет: ')
     try:
         del teachers[name]
         del teachers_subject[name]
@@ -36,6 +48,16 @@ def delete_teacher():
         file.write(str(teachers_subject))
     with open('data\Teachers', 'w', encoding='utf-8') as file:
         file.write(str(teachers))
+    with open('data\students', 'r', encoding='utf-8') as file:
+        tmp = eval(file.read())
+        for item in tmp.keys():
+            with open(f'data\students_grade\{item}', 'r', encoding='utf-8') as file:
+                grades = eval(file.read())
+                for j, jitem in enumerate(grades):
+                    if jitem[0] == f'{subject}: ':
+                        grades.pop(j)
+            with open(f'data\students_grade\{item}', 'w', encoding='utf-8') as file:
+                file.write(str(grades))
 
 
 groups = []
@@ -79,17 +101,20 @@ def add_student():
         file.write(str(groups_))
     with open(f'data\groups\{class_}', 'w', encoding='utf-8') as file:
         file.write(str(group))
+    with open(f'data\students_grade\{name}', 'w', encoding='utf-8') as file:
+        file.write('[]')
 
 
 def delete_student():
     class_ = input('Введите класс: ')
     name = input('Введите логин: ')
+    os.remove(f'data\students_grade\{name}')
     with open('data\students', 'r', encoding='utf-8') as file:
         student_password = eval(file.read())
     with open(f'data\groups\{class_}', 'r', encoding='utf-8') as file:
         group_ = eval(file.read())
-        group_.remove(name)
     try:
+        group_.remove(name)
         del student_password[name]
     except KeyError:
         pass
@@ -97,12 +122,12 @@ def delete_student():
         file.write(str(student_password))
     with open(f'data\groups\{class_}', 'w', encoding='utf-8') as file:
         file.write(str(group_))
-
-
-
-
-
-
-
-
-
+    with open(f'data\groups\{class_}', 'r', encoding='utf-8') as file:
+        data = file.read()
+    if data == '[]':
+        os.remove(f'data\groups\{class_}')
+        with open(f'data\groups\groups', 'r', encoding='utf-8') as file:
+            tmp = eval(file.read())
+            tmp.remove(class_)
+        with open(f'data\groups\groups', 'w', encoding='utf-8') as file:
+            file.write(str(tmp))

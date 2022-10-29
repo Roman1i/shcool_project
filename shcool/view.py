@@ -1,3 +1,5 @@
+import teacher
+import student
 import admin
 import login
 
@@ -18,18 +20,33 @@ def login_screen():
 
 def teacher_menu(login_, subject):
     print('\n\t' + '*' * 3 + f' Личный кабинет {login_} ' + '*' * 3 + '')
-    print(f'\t {subject}\n')
-    print('1. учить ')
-    print('2. учить')
-    print('3. учить')
+    print(f'\t Предмет: {subject}\n')
+    print('1. Журнал')
+    print('2. Поставить оценку')
+    print('3. Выйти')
+    x = input()
+    if x == '1':
+        teacher.journal(subject)
+        teacher_menu(login_, subject)
+    if x == '2':
+        teacher.journal(subject)
+        teacher.grade(subject)
+        teacher_menu(login_, subject)
+    if x == '3':
+        login_screen()
 
 
 def student_menu(login_, group):
     print('\n\t' + '*' * 3 + f' Личный кабинет {login_} ' + '*' * 3 + '')
-    print(f'\t Ученик {group} класса\n')
-    print('1. учиться ')
-    print('2. учиться')
-    print('3. учиться')
+    print(f'\t Ученик группы {group} \n')
+    print('1. Оценки ')
+    print('2. Выйти')
+    x = input()
+    if x == '1':
+        student.show_grades(login_)
+        student_menu(login_, group)
+    if x == '2':
+        login_screen()
 
 
 def admin_menu():
@@ -86,9 +103,3 @@ def admin_student_menu():
         admin_student_menu()
     if x == '4':
         admin_menu()
-
-
-
-
-
-

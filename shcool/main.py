@@ -1,7 +1,4 @@
-with open('groups\groups', 'r', encoding='utf-8') as file:
-    lst_ = eval(file.read())
+import controller
 
-if input() in lst_:
-    print('True')
-else:
-    print('False')
+
+controller.start_program()
